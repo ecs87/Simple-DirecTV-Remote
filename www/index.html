@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Simple DirecTV Remote</title>
+		
+		<!-- CSS
+		================================================== -->
+		<link rel="stylesheet" href="customStyles.css">
+
+		<!-- Fonts
+		================================================== -->
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,600italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+
+    </head>
+    <body>	
+		<!-- settings overlay -->
+		<div id="userSettings-overlay" class="settings-overlay">
+			<div id="settings-IPlist-uniq">
+				<form id="ipListForm"></form>
+				<div class="IPlist-btns">
+					<a onclick="IPlistbtnOK();">OK</a>
+					<a onclick="IPlistbtnCancel();">Cancel</a>
+				</div>
+			</div>
+			<div id="settings-spinner-uniq">
+				<div class="settings-spinner-wrapper">
+					Scanning your network, please wait...
+					<img src="images/spinner.gif" />
+				</div>
+			</div>
+			<a id="userSettings-overlay-uniq" onclick="jQuery('#userSettings-overlay').toggle('slow'); jQuery('#manual-ip').hide('slow'); jQuery('#advanced-settings').hide('slow');" class="userSettings-overlay-colorer"></a>
+			<div id="settings-main-uniq" class="settings-main">
+				<div id="settings-main-btns" class="settings-btns">
+					<a onclick="jQuery('#manual-ip').show('slow'); jQuery('#settings-main-btns').hide('slow');">Enter IP Address Manually</a>
+					<!-- snip... "scanning" doesn't work on iOS devices nor IE. Figures... it does however work in Firefox, Chrome and on Android devices. So Displayed none until this is resolved -->
+					<a onclick="IPaddressFinder();">Scan Network for Receivers</a>
+					<!-- end snip -->
+					<a onclick="jQuery('#advanced-settings').show('slow'); jQuery('#settings-main-btns').hide('slow'); document.getElementById('settings-main-uniq').style.marginTop = '-155px'">Advanced IR Endpoint Options</a>
+				</div>
+				<div id="manual-ip">
+					<label>IP Address</label>
+					<input id="saveIPaddress" label="IP Address"></input>
+					<div class="mip-btns">
+						<a onclick="storeIPaddress();">OK</a>
+						<a onclick="jQuery('#manual-ip').hide('slow'); jQuery('#settings-main-btns').show('slow');">Cancel</a>
+					</div>
+				</div>
+				<div id="advanced-settings">
+					<label>IP Address</label>
+					<input id="IPSpecial"></input>
+					<label>Port</label>
+					<input id="PortSpecial"></input>
+					<label>ON endpoint</label>
+					<input id="OnSpecial"></input>
+					<label>OFF endpoint</label>
+					<input id="OffSpecial"></input>
+					<label>Vol+ endpoint</label>
+					<input id="VolUpSpecial"></input>
+					<label>Vol- endpoint</label>
+					<input id="VolDownSpecial"></input>
+					<label>Mute endpoint</label>
+					<input id="MuteSpecial"></input>
+					<div class="mip-btns">
+						<a onclick="storeAdvancedSettings(); document.getElementById('settings-main-uniq').style.marginTop = '-90px'">OK</a>
+						<a onclick="jQuery('#advanced-settings').hide('slow'); jQuery('#settings-main-btns').show('slow'); jQuery('#settings-main-btns').show('slow'); document.getElementById('settings-main-uniq').style.marginTop = '-90px' "> Cancel </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- main -->
+		<a onclick="UserSettings();" class="settings-btn">Tap here to access the settings<img src="images/settings.png" /></a>
+		<div id="btn-holder-portrait">
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=poweron&hold=keyPress'); dothisIR('savedOnSpecial');">On</a>
+				<a id="powerOn-btn" onclick="dothisIR('savedMuteSpecial');">Mute</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=poweroff&hold=keyPress'); dothisIR('savedOffSpecial');">Off</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=guide&hold=keyPress');">Guide</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=menu&hold=keyPress');">Menu</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=list&hold=keyPress');">List</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=record&hold=keyPress');">Record</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=up&hold=keyPress');">Up</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=exit&hold=keyPress');">Exit</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=left&hold=keyPress');">Left</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=select&hold=keyPress');">Select</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=right&hold=keyPress');">Right</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=active&hold=keyPress');">Live</a> <!-- ?? -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=down&hold=keyPress');">Down</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=info&hold=keyPress');">Info</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothisIR('savedVolUpSpecial');">Vol +</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=prev&hold=keyPress');">Previous</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=chanup&hold=keyPress');">Ch +</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothisIR('savedVolDownSpecial');">Vol -</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=pause&hold=keyPress');">Pause</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=chandown&hold=keyPress');">Ch -</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=rew&hold=keyPress');"><<</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=play&hold=keyPress');">Play</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=ffwd&hold=keyPress');">>></a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=1&hold=keyPress');">1</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=2&hold=keyPress');">2 (ABC)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=3&hold=keyPress');">3 (DEF)</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=4&hold=keyPress');">4 (GHI)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=5&hold=keyPress');">5 (JKL)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=6&hold=keyPress');">6 (MNO)</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=7&hold=keyPress');">7 (PQRS)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=8&hold=keyPress');">8 (TUV)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=9&hold=keyPress');">9 (WXYZ)</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=dash&hold=keyPress');">-</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=0&hold=keyPress');">0 (_)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=enter&hold=keyPress');">Enter (Input)</a>
+			</div>
+		</div>
+		<!-- landscape layout -->
+		<div id="btn-holder-landscape">
+			<div class="btn-row">
+				<!-- start special -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=poweron&hold=keyPress'); dothisIR('savedOnSpecial');">On</a>
+				<a id="powerOn-btn" onclick="dothisIR('savedMuteSpecial');">Mute</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=poweroff&hold=keyPress'); dothisIR('savedOffSpecial');">Off</a>
+				<!-- end special -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=guide&hold=keyPress');">Guide</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=menu&hold=keyPress');">Menu</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=list&hold=keyPress');">List</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=record&hold=keyPress');">Record</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=up&hold=keyPress');">Up</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=exit&hold=keyPress');">Exit</a>
+				<!-- start special -->
+				<a id="powerOn-btn" onclick="dothisIR('savedVolUpSpecial');">Vol +</a>
+				<!-- end special -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=prev&hold=keyPress');">Previous</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=chanup&hold=keyPress');">Ch +</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=left&hold=keyPress');">Left</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=select&hold=keyPress');">Select</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=right&hold=keyPress');">Right</a>
+				<!-- start special -->
+				<a id="powerOn-btn" onclick="dothisIR('savedVolDownSpecial');">Vol -</a>
+				<!-- end special -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=pause&hold=keyPress');">Pause</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=chandown&hold=keyPress');">Ch -</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=active&hold=keyPress');">Live</a> <!-- ?? -->
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=down&hold=keyPress');">Down</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=info&hold=keyPress');">Info</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=rew&hold=keyPress');"><<</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=play&hold=keyPress');">Play</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=ffwd&hold=keyPress');">>></a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=1&hold=keyPress');">1</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=2&hold=keyPress');">2 (ABC)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=3&hold=keyPress');">3 (DEF)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=4&hold=keyPress');">4 (GHI)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=5&hold=keyPress');">5 (JKL)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=6&hold=keyPress');">6 (MNO)</a>
+			</div>
+			<div class="btn-row">
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=7&hold=keyPress');">7 (PQRS)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=8&hold=keyPress');">8 (TUV)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=9&hold=keyPress');">9 (WXYZ)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=dash&hold=keyPress');">-</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=0&hold=keyPress');">0 (_)</a>
+				<a id="powerOn-btn" onclick="dothis('/remote/processKey?key=enter&hold=keyPress');">Enter (Input)</a>
+			</div>
+		</div>
+		<!-- scripts -->
+        <script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="jquery.min.js"></script> <!-- 3.2.1 -->
+		<script type="text/javascript">
+			var i = 0;
+			var subnetFinal = "";
+			//get stored IP address if there is one
+			var ipAddress = "";
+			//var ipAddressSearchedArray = {};
+			var userSettings = localStorage.getItem("savedIP");
+			var savedIPaddressSpecial = localStorage.getItem("savedIPSpecial");
+			var savedPortSpecial = localStorage.getItem("savedPortSpecial");
+			var savedOnSpecial = localStorage.getItem("savedOnSpecial");
+			var savedOffSpecial = localStorage.getItem("savedOffSpecial");
+			var savedVolUpSpecial = localStorage.getItem("savedVolUpSpecial");
+			var savedVolDownSpecial = localStorage.getItem("savedVolDownSpecial");
+			var savedMuteSpecial = localStorage.getItem("savedMuteSpecial");
+			if (userSettings) { 
+				ipAddress = userSettings;
+				document.getElementById("saveIPaddress").value = ipAddress;
+			}
+			if (savedIPaddressSpecial && savedPortSpecial && savedOnSpecial && savedOffSpecial && savedVolUpSpecial && savedVolDownSpecial && savedMuteSpecial) {
+				document.getElementById("IPSpecial").value = savedIPaddressSpecial;
+				document.getElementById("PortSpecial").value = savedPortSpecial;
+				document.getElementById("OnSpecial").value = savedOnSpecial;
+				document.getElementById("OffSpecial").value = savedOffSpecial;
+				document.getElementById("VolUpSpecial").value = savedVolUpSpecial;
+				document.getElementById("VolDownSpecial").value = savedVolDownSpecial;
+				document.getElementById("MuteSpecial").value = savedMuteSpecial;
+			}
+			function dothis(endpointURL) {
+				ipAddress = localStorage.getItem("savedIP");
+				jQuery.ajax({
+					type: 'GET',
+					url: encodeURI("http://" + ipAddress + ":8080" + endpointURL),
+					async: true,
+					dataType: 'text',
+				});
+			}
+			function dothisIR(endpointURL) {
+				savedIPaddressSpecial = localStorage.getItem("savedIPSpecial");
+				savedPortSpecial = localStorage.getItem("savedPortSpecial");
+				endpointURLfinal = localStorage.getItem(endpointURL);
+				jQuery.ajax({
+					type: 'GET',
+					url: encodeURI("http://" + savedIPaddressSpecial + ":" + savedPortSpecial + endpointURLfinal),
+					async: true,
+					dataType: 'text',
+				});
+			}
+			//store selected IP from autoscan
+			function IPlistbtnOK() {
+				var savedIPaddress = jQuery('input[name=foundIPs]:checked', '#ipListForm').val();
+				localStorage.setItem("savedIP", savedIPaddress);
+				document.getElementById("saveIPaddress").value = savedIPaddress;
+				jQuery('#settings-IPlist-uniq').toggle('slow');
+				jQuery('#settings-main-uniq').toggle('slow');
+			}
+			function IPlistbtnCancel() {
+				jQuery('#settings-IPlist-uniq').toggle('slow');
+				jQuery('#settings-main-uniq').toggle('slow');
+			}
+			//handle Orientation changes
+			doOnOrientationChange();
+			window.addEventListener('orientationchange', doOnOrientationChange);
+			//Orientation change function
+			function doOnOrientationChange() {
+				//alert(window.orientation);
+			    switch(window.orientation) {  
+					case 90:
+						jQuery('#btn-holder-landscape').show('slow');
+						jQuery('#btn-holder-portrait').hide('slow');
+					break;
+					case -90:
+						jQuery('#btn-holder-landscape').show('slow');
+						jQuery('#btn-holder-portrait').hide('slow');
+					break; 
+					default:
+						jQuery('#btn-holder-landscape').hide('slow');
+						jQuery('#btn-holder-portrait').show('slow');
+					break; 
+				}
+			}
+			function UserSettings() {
+				jQuery('#userSettings-overlay').show('slow');
+				jQuery('#settings-main-btns').show('slow');
+			}
+			function storeIPaddress() {
+				var savedIPaddress = document.getElementById("saveIPaddress").value;
+				localStorage.setItem("savedIP", savedIPaddress);
+				jQuery('#manual-ip').toggle('slow');
+				jQuery('#settings-main-btns').toggle('slow');
+				userSettings = localStorage.getItem("savedIP");
+			}
+			function storeAdvancedSettings() {
+				var savedIPaddressSpecial = document.getElementById("IPSpecial").value;
+				var savedPortSpecial = document.getElementById("PortSpecial").value;
+				var savedOnSpecial = document.getElementById("OnSpecial").value;
+				var savedOffSpecial = document.getElementById("OffSpecial").value;
+				var savedVolUpSpecial = document.getElementById("VolUpSpecial").value;
+				var savedVolDownSpecial = document.getElementById("VolDownSpecial").value;
+				var savedMuteSpecial = document.getElementById("MuteSpecial").value;
+				
+				localStorage.setItem("savedIPSpecial", savedIPaddressSpecial);
+				localStorage.setItem("savedPortSpecial", savedPortSpecial);
+				localStorage.setItem("savedOnSpecial", savedOnSpecial);
+				localStorage.setItem("savedOffSpecial", savedOffSpecial);
+				localStorage.setItem("savedVolUpSpecial", savedVolUpSpecial);
+				localStorage.setItem("savedVolDownSpecial", savedVolDownSpecial);
+				localStorage.setItem("savedMuteSpecial", savedMuteSpecial);
+				
+				jQuery('#advanced-settings').toggle('slow');
+				jQuery('#settings-main-btns').toggle('slow');
+			}
+			//IP address finder
+			function IPaddressFinder() {
+				jQuery('#ipListForm').empty();
+				foundIPs.length = 0;
+				//document.getElementById("settings-main-uniq").style.display = "none";
+				//document.getElementById("settings-spinner-uniq").style.display = "block";
+				jQuery('#settings-main-uniq').toggle('slow');
+				jQuery('#settings-spinner-uniq').toggle('slow');
+				document.getElementById('userSettings-overlay-uniq').removeAttribute("onclick");
+				window.networkinterface.getWiFiIPAddress(
+					function(ip, subnet) { 
+						subnetFinal = ip.substring(0, ip.lastIndexOf("."));
+						postSubnetFinal();
+					}
+				);
+			
+			}
+			function postSubnetFinal() {
+				i = 0;
+				xhrCount = 0;
+				while (i < 256) {
+					var callback = "";
+					var test = encodeURI("http://"+ subnetFinal + "." + i + ":8080/info/mode");
+					httpGetAsync(test, callback, i); 
+					i++;
+				}
+			}
+			//AJAX/XHR stuff
+			var xhrCount = 0; var xhr; var foundIPs = [];
+			function httpGetAsync(theUrl, callback, i)
+			{
+				if(xhrCount != 0) { setTimeout(function(){ 
+					xhr.abort();
+					xhr = jQuery.ajax({
+						type: 'GET',
+						url: theUrl,
+						async: true,
+						dataType: 'json',
+						error: function() { }, 
+						success: function(text) { 
+							if (text['status']['code'] == 200) {
+								finalIPtransfer = theUrl.substring(theUrl.indexOf("http://") + 7, theUrl.lastIndexOf(":8080"));
+								foundIPs.push(finalIPtransfer); 
+							} 
+						},
+						complete: function (data) {
+							if (i == 255) {
+								document.getElementById("userSettings-overlay-uniq").addEventListener("click", function(event) { jQuery('#userSettings-overlay').hide('slow') });
+								document.getElementById("userSettings-overlay-uniq").addEventListener("click", function(event) { jQuery('#manual-ip').hide('slow') });
+								document.getElementById("userSettings-overlay-uniq").addEventListener("click", function(event) { jQuery('#settings-main-btns').hide('slow') });
+								//show found interfaces and make user select. upon final selection (either cancel or OK) go back to main settings screen
+								jQuery('#settings-IPlist-uniq').toggle('slow');
+								fipLen = foundIPs.length;
+								for (var j = 0; j < fipLen; j++) {
+									jQuery("#settings-IPlist-uniq form").append("<input type='radio' value='"+foundIPs[j]+"' name='foundIPs'>" + foundIPs[j] + "<br>");
+								}
+								jQuery('#settings-spinner-uniq').toggle('slow');
+							}
+						}
+					});
+					}, 250 * xhrCount);
+					xhrCount++;
+				}
+				else {
+					xhr = jQuery.ajax({
+						type: 'GET',
+						url: theUrl,
+						async: true,
+						dataType: 'json',
+						error: function() { }, 
+						success: function(text) { 
+							if (text['status']['code'] == 200) {
+								foundIPs.push(theUrl)
+							} 
+						},
+					});
+					xhrCount++;
+				}
+			}
+		</script>
+    </body>
+</html>

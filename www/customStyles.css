@@ -1,0 +1,169 @@
+body {
+	font-size: 10px;
+	font-family: 'Lato';
+	margin: 0;
+	height: 100vh;
+}
+.settings-btn img {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 35px;
+    margin: 0 0 0 5px;
+}
+.settings-btn {
+    text-align: right;
+	display: block;
+	padding: 10px 10px 0 10px;
+	box-sizing: border-box;
+	position: relative;
+}
+.btn-row a {
+    display: inline-block;
+    width: 32%;
+    margin: 0 2% 0 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 5.4vh;
+    background: rgb(121, 121, 121);
+    color: #FFF;
+    text-transform: uppercase;
+    font-family: 'Lato';
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px 0px #000;
+    border: 1px solid #000;
+}
+.btn-row a:active {
+	color: #000;
+	background: #FFF;
+}
+.btn-row a:last-child {
+	margin: 0;
+}
+.btn-row:nth-child(2) {
+	margin: 3vh 0 1.5vh 0;
+}
+.btn-row:nth-child(5) {
+	margin: 1.5vh 0 3vh 0;
+}
+.btn-row:nth-child(8) {
+	margin: 1.5vh 0 3vh 0;
+}
+.btn-row {
+	font-size: 0;
+	margin: 0 0 1.5vh 0;
+	padding: 0 20px;
+}
+#btn-holder-landscape .btn-row:nth-child(2), #btn-holder-landscape .btn-row:nth-child(5) {
+    margin: 3vh 0 1.5vh 0;
+}
+#btn-holder-portrait, #btn-holder-landscape {
+    margin: 1.5vh 0 0 0;
+}
+#btn-holder-landscape a {
+    width: 15%;
+    line-height: 11.2vh;
+}
+input {
+    font-family: 'Lato';
+    font-size: 12px;
+}
+.settings-overlay {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+	display: none;
+	overflow: hidden;
+}
+.userSettings-overlay-colorer {
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    height: 100vh;
+    position: absolute;
+    width: 100%;
+	top: 0;
+}
+.settings-main, #settings-IPlist-uniq {
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    background: #FFF;
+    width: 80%;
+    margin: 0 auto;
+    z-index: 2;
+    position: relative;
+    top: 50%;
+    margin-top: -90px;
+}
+.settings-btns a, .IPlist-btns a {
+    background: #000;
+    color: #FFF;
+    padding: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 5px;
+    font-size: 12px;
+    width: 100%;
+    border-radius: 5px;
+}
+#ipListForm {
+    margin: 0 0 20px 0;
+	font-size: 14px;
+}
+#manual-ip, #advanced-settings {
+	display: none;
+}
+.mip-btns a {
+    background: #000;
+    color: #FFF;
+    padding: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 10px 0 0 0;
+    font-size: 12px;
+    width: 100%;
+    border-radius: 5px;
+}
+label {
+    margin: 0 5px 0 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#advanced-settings input {
+    display: inline-block;
+    width: 58%;
+    vertical-align: middle;
+    margin: 5px 0 0 0;
+}
+#advanced-settings label {
+	margin: 0 5px 0 0;
+	font-size: 10px;
+	display: inline-block;
+	width: 35%;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+#settings-IPlist-uniq, #settings-spinner-uniq {
+	display: none;
+}
+#settings-spinner-uniq {
+    text-align: center;
+    background: #FFF;
+    height: 100%;
+    color: #000;
+    z-index: 5;
+    position: relative;
+}
+.settings-spinner-wrapper {
+    top: 50%;
+    position: relative;
+    z-index: 10;
+    margin-top: -44px;
+    height: 100%;
+    background: #FFF;
+}
+#settings-spinner-uniq img {
+	display: block;
+	margin: 10px auto 0;
+}
