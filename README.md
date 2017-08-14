@@ -23,9 +23,15 @@ You can also piggyback both the DirecTV power off API and your IR Rest API toget
 Here's an example of an Advanced IR Endpoint (I have a REST API IR server running on my S5 at 192.168.1.33:8080. To power on my LG TV I send: http://192.168.1.33:8080/powerOn to send an IR signal to turn it on):
 
 IP address: 192.168.1.33
+
 Port: 8080
+
 ON endpoint: /powerOn
+
 OFF endpoint: /powerOff
+
 Vol+ endpoint: /volUp
+
 Vol- endpoint: /volDown
+
 Mute endpoint: /muteVol
