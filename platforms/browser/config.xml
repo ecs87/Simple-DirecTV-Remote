@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.elsonsmith.simplerc" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+    <feature name="networkinterface">
+        <param name="browser-package" value="networkinterface" />
+    </feature>
+    <name>Simple Remote Control</name>
+    <description>
+        A app made by Elson Smith (elsonsmith87@gmail.com) that allows you to control your DirecTV entertainment center from your phone.
+    </description>
+    <author email="elsonsmith87@gmail.com" href="http://elsonsmith.com/portfolio">
+        Elson Smith
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="*" />
+    <allow-navigation href="*" />
+    <icon src="images/src-icon.png" />
+</widget>
