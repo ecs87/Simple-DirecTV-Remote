@@ -38,7 +38,7 @@
 				<div id="settings-main-btns" class="settings-btns">
 					<a onclick="jQuery('#manual-ip').show('slow'); jQuery('#settings-main-btns').hide('slow');">Enter IP Address Manually</a>
 					<!-- snip... "scanning" doesn't work on iOS devices nor IE. Figures... it does however work in Firefox, Chrome and on Android devices. So Displayed none until this is resolved -->
-					<a onclick="IPaddressFinder();">Scan Network for Receivers</a>
+					<a style="display: none !important" onclick="IPaddressFinder();">Scan Network for Receivers</a>
 					<!-- end snip -->
 					<a onclick="jQuery('#advanced-settings').show('slow'); jQuery('#settings-main-btns').hide('slow'); document.getElementById('settings-main-uniq').style.marginTop = '-155px'">Advanced IR Endpoint Options</a>
 				</div>
