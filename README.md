@@ -16,7 +16,7 @@ If you are on a iOS device or in Internet Explorer you won't be able to use the 
 
 If you are on an Android device or are using a browser other than IE, feel free to remove the forced "display:none;" at line 41 to use the auto scanning option.
 
-If you want your vol up, vol down, and mute buttons to work, please refer to my Android IR (infared) REST API server for devices with IR blasters. You will need to enter your endpoint API information into the "Advanced IR Endpoint Options" of the settings for this to work through the remote.
+If you want your vol up, vol down, and mute buttons to work, please refer to my <a href="https://github.com/ecs87/Java-Infrared-REST-API-Server-for-Android">Android IR (infared) REST API server</a> for devices with IR blasters. You will need to enter your endpoint API information into the "Advanced IR Endpoint Options" of the settings for this to work through the remote.
 
 You can also piggyback both the DirecTV power off API and your IR Rest API together to shut off two devices at once (IE: shutting off your DirecTV receiver and TV at the same time).
 
